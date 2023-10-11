@@ -33,4 +33,40 @@ int main(void) {
 	puts("Enter the average number of customers per hour:");
 	scanf_s("%d", &perhour);
 	min_per_cust = MIN_PER_HR / perhour;
+
+	for (cycle = 0; cycle < cyclelimit; cycle++) {
+		if (newcustomer(min_per_cust)) {
+			if (QueueIsFull(&line))
+				turnaways++;
+			else {
+				customers++;
+				temp = customertime(cycle);
+				EnQueue(temp, &line);
+			}
+		}
+		if (wait_time <= 0 && !QueueIsEmpty(&line)) {
+			DeQueue(&temp, &line);
+			wait_time = temp.processtime;
+			line_wait += cycle - temp.arrive;
+			served++;
+		}
+		if (wait_time > 0)
+			wait_time--;
+		sum_line += QueueItemCount(&line);
+	}
+
+	if (customers > 0) {
+		printf("customers accepted:%ld\n", customers);
+		printf("		customers served:%ld\n", served);
+		printf("			turnaways:%ld\n", turnaways);
+		printf("average queue size:%.2f\n", (double)sum_line / cyclelimit);
+		printf("	average wait time: %.2f minutes\n", (double)line_wait / served);
+	}
+	else
+		puts("No customers!");
+	EmptyTheQueue(&line);
+	puts("Bye!");
+
+	return 0;
 }
+
