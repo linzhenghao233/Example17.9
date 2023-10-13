@@ -70,3 +70,23 @@ int main(void) {
 	return 0;
 }
 
+//x是顾客到来的平均时间（单位：分钟）
+//该如果1分钟内有顾客到来，则返回true
+bool newcustomer(double x) {
+	if (rand() * x / RAND_MAX < 1)
+		return true;
+	else
+		return false;
+}
+
+//when是顾客到来的时间
+//该函数返回一个Item结构，该顾客到达的时间设置为when
+//咨询时间设置为1~3的随机数
+Item customertime(long when) {
+	Item cust;
+
+	cust.processtime = rand() % 3 + 1;
+	cust.arrive = when;
+
+	return cust;
+}
